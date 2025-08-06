@@ -33,17 +33,9 @@ Promise.all([
         (r) => r.json(),
     ),
 ]).then(([temperatureData, temperatureData2]) => {
-    const seriesMachine1 = chart
-        .addPointLineAreaSeries({ dataPattern: 'ProgressiveX' })
-        .setName('Machine 1 temperature')
-        .appendJSON(temperatureData)
-        .setAreaFillStyle(emptyFill)
+    const seriesMachine1 = chart.addLineSeries().setName('Machine 1 temperature').appendJSON(temperatureData)
 
-    const seriesMachine2 = chart
-        .addPointLineAreaSeries({ dataPattern: 'ProgressiveX' })
-        .setName('Machine 2 temperature')
-        .appendJSON(temperatureData2)
-        .setAreaFillStyle(emptyFill)
+    const seriesMachine2 = chart.addLineSeries().setName('Machine 2 temperature').appendJSON(temperatureData2)
 
     const thresholdLine = axisY
         .addConstantLine(true)
@@ -60,13 +52,12 @@ Promise.all([
         .setPointerEvents(false)
 
     // Configure both Axis intervals manually to add some extra space around line series
-    axisX.setInterval({
-        start: Math.min(seriesMachine1.getXMin(), seriesMachine2.getXMin()) - 1000,
-        end: Math.max(seriesMachine1.getXMax(), seriesMachine2.getXMax()) + 1000,
-    })
-
-    axisY.setInterval({
+    axisX.setDefaultInterval((state) => ({
+        start: state.dataMin - 1000,
+        end: state.dataMax + 1000,
+    }))
+    axisX.setDefaultInterval((state) => ({
         start: 0,
-        end: Math.max(seriesMachine1.getYMax(), seriesMachine2.getYMax()) + 20,
-    })
+        end: state.dataMax + 20,
+    }))
 })
