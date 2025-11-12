@@ -33,9 +33,13 @@ Promise.all([
         (r) => r.json(),
     ),
 ]).then(([temperatureData, temperatureData2]) => {
-    const seriesMachine1 = chart.addLineSeries().setName('Machine 1 temperature').appendJSON(temperatureData)
+    const seriesMachine1 = chart.addLineSeries(
+        {automaticColorIndex: 0},
+    ).setName('Machine 1 temperature').appendJSON(temperatureData)
 
-    const seriesMachine2 = chart.addLineSeries().setName('Machine 2 temperature').appendJSON(temperatureData2)
+    const seriesMachine2 = chart.addLineSeries(
+        {automaticColorIndex: 2},
+    ).setName('Machine 2 temperature').appendJSON(temperatureData2)
 
     const thresholdLine = axisY
         .addConstantLine(true)
